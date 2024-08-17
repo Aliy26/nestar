@@ -7,7 +7,3 @@ export class AppResolver {
 		return "GraphQL API Server";
 	}
 }
-
-function sayHello(): any {
-	throw new Error("Function not implemented.");
-}
