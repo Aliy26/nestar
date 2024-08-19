@@ -1,5 +1,5 @@
-import { Schema } from 'mongoose';
-import { BoardArticleCategory, BoardArticleStatus } from '../libs/enums/board-article.enum';
+import { Schema } from "mongoose";
+import { BoardArticleCategory, BoardArticleStatus } from "../libs/enums/board-article.enum";
 
 const BoardArticleSchema = new Schema(
 	{
@@ -47,10 +47,10 @@ const BoardArticleSchema = new Schema(
 		memberId: {
 			type: Schema.Types.ObjectId,
 			required: true,
-			ref: 'Member',
+			ref: "Member",
 		},
 	},
-	{ timestamps: true, collection: 'boardArticles' },
+	{ timestamps: true, collection: "boardArticles" },
 );
 
 export default BoardArticleSchema;
