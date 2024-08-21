@@ -17,8 +17,8 @@ export class MemberService {
 			// TODO Authentication via Token
 			return result;
 		} catch (err) {
-			console.log("Error, Sirvice.model", err);
-			throw new BadRequestException(err);
+			console.log("Error, Sirvice.model", err.message);
+			throw new BadRequestException(Message.USED_MEMBER_NICK_OR_PHONE);
 		}
 	}
 
@@ -27,7 +27,6 @@ export class MemberService {
 		const response: Member = await this.memberModel
 			.findOne({ memberNick: memberNick })
 			.select("+memberPassword")
-			.lean()
 			.exec();
 		if (!response || response.memberStatus === MemberStatus.DELETE) {
 			throw new InternalServerErrorException(Message.NO_MEMBER_NICK);
