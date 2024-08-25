@@ -13,17 +13,18 @@ export class AuthService {
 		return (memberPassword = await bcrypt.hash(memberPassword, salt));
 	}
 
-	public async comparePasswords(password: string, hashedPassword: string): Promise<boolean> {
-		return await bcrypt.compare(password, hashedPassword);
-	}
-
 	public async createToken(member: Member): Promise<string> {
 		const payload: T = {};
 		Object.keys(member["_doc"] ? member["_doc"] : member).map((ele) => {
 			payload[`${ele}`] = member[`${ele}`];
 		});
+
 		delete payload.memberPassword;
 		return await this.jwtService.signAsync(payload);
+	}
+
+	public async comparePasswords(password: string, hashedPassword: string): Promise<boolean> {
+		return await bcrypt.compare(password, hashedPassword);
 	}
 
 	public async verifyToken(token: string): Promise<Member> {

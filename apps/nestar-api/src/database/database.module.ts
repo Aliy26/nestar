@@ -1,4 +1,4 @@
-import { Inject, Module } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { InjectConnection, MongooseModule } from "@nestjs/mongoose";
 import { Connection } from "mongoose";
 

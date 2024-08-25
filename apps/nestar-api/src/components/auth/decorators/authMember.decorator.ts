@@ -1,8 +1,8 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 
 export const AuthMember = createParamDecorator((data: string, context: ExecutionContext | any) => {
 	let request: any;
-	if (context.contextType === 'graphql') {
+	if (context.contextType === "graphql") {
 		request = context.getArgByIndex(2).req;
 		if (request.body.authMember) {
 			request.body.authMember.authorization = request.headers?.authorization;
@@ -11,6 +11,7 @@ export const AuthMember = createParamDecorator((data: string, context: Execution
 
 	const member = request.body.authMember;
 
-	if (member) return data ? member?.[data] : member;
+	if (member)
+		return data ? member?.[data] : member; //member.[data] == dynamic key
 	else return null;
 });
