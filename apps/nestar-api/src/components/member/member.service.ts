@@ -58,6 +58,7 @@ export class MemberService {
 			.findOneAndUpdate({ _id: memberId, memberStatus: MemberStatus.ACTIVE }, input, { new: true })
 			.exec();
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+
 		result.accessToken = await this.authService.createToken(result);
 		return result;
 	}
@@ -76,7 +77,7 @@ export class MemberService {
 			const viewInput: ViewInput = { memberId: memberId, viewRefId: targetId, viewGroup: ViewGroup.MEMBER };
 			const newView = await this.viewService.recordView(viewInput);
 			if (newView) {
-				await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: 1 } }, { new: true }).exec();
+				await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: +1 } }, { new: true }).exec();
 				targetMember.memberViews++;
 			}
 		}
@@ -86,6 +87,7 @@ export class MemberService {
 
 	public async getAgents(memberId: ObjectId, input: AgentsInquiry): Promise<Members> {
 		const { text } = input.search;
+
 		const match: T = { memberType: MemberType.AGENT, memberStatus: MemberStatus.ACTIVE };
 		const sort: T = { [input?.sort ?? "createdAt"]: input?.direction ?? Direction.DESC };
 
@@ -135,7 +137,9 @@ export class MemberService {
 	}
 
 	public async updateMemmberByAdmin(input: MemberUpdate): Promise<Member> {
-		const result: Member = await this.memberModel.findOneAndUpdate({ _id: input._id }, input, { new: true }).exec();
+		const id = input._id;
+		delete input._id;
+		const result: Member = await this.memberModel.findOneAndUpdate({ _id: id }, input, { new: true }).exec();
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 		return result;
 	}
