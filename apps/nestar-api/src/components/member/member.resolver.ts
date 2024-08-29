@@ -117,6 +117,7 @@ export class MemberResolver {
 				.pipe(createWriteStream(url))
 				.on("finish", async () => resolve(true))
 				.on("error", () => reject(false));
+			// .on("error", (err: any) => reject(err));
 		});
 		if (!result) throw new Error(Message.UPLOAD_FAILED);
 
