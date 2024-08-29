@@ -1,16 +1,23 @@
-// ZO-TASK:
+// ZP-TASK:
 
-// Shunday function yozing, u parametrdagi string ichidagi qavslar miqdori balansda ekanligini aniqlasin. Ya'ni ochish("(") va yopish(")") qavslar soni bir xil bolishi kerak.
-// MASALAN: areParenthesesBalanced("string()ichida(qavslar)soni()balansda") return true
+// shunday function yozing, u 2 ta array parametr qabul qilsin. Siz bu ikki arrayning qiymatlari o'xshash bo'lishini (ya'ni, ularning barcha elementlari bir xil bo'lishini) tekshirishingiz kerak.
 
-function areParenthesesBalanced(str: string): boolean {
-	let count: number = 0;
-	for (let letter of str) {
-		if (letter === "(") count++;
-		else if (letter === ")") count--;
+// MASALAN:
+// areArraysEqual([1, 2, 3], [3, 1, 2]) // true
+// areArraysEqual([1, 2, 3], [3, 1, 2, 1]) // true
+// areArraysEqual([1, 2, 3], [4, 1, 2]) // false
+
+function areArraysEqual(arr: number[], arr2: number[]) {
+	let count = 0;
+	for (let value of arr) {
+		if (!arr2.includes(value)) count++;
 	}
-
-	return count === 0 ? true : false;
+	for (let value of arr2) {
+		if (!arr.includes(value)) count++;
+	}
+	return count >= 1 ? false : true;
 }
 
-console.log(areParenthesesBalanced("string()ichida(qavslar)soni()balansda"));
+console.log(areArraysEqual([1, 2, 3], [3, 1, 2])); // true
+console.log(areArraysEqual([1, 2, 3], [3, 1, 2, 1])); //true
+console.log(areArraysEqual([1, 2, 3], [4, 1, 2])); //false
