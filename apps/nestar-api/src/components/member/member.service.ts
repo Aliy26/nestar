@@ -20,7 +20,6 @@ import { StatisticModifier, T } from "../../libs/types/common";
 import { ViewService } from "../view/view.service";
 import { ViewInput } from "../../libs/dto/view/view.input";
 import { ViewGroup } from "../../libs/enums/view.enum";
-import { Property } from "../../libs/dto/property/property";
 
 @Injectable()
 export class MemberService {

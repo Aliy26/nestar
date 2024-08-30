@@ -7,7 +7,7 @@
 // areArraysEqual([1, 2, 3], [3, 1, 2, 1]) // true
 // areArraysEqual([1, 2, 3], [4, 1, 2]) // false
 
-function areArraysEqual(arr: number[], arr2: number[]) {
+function areArraysEqual(arr: number[], arr2: number[]): boolean {
 	let count = 0;
 	for (let value of arr) {
 		if (!arr2.includes(value)) count++;
@@ -18,6 +18,6 @@ function areArraysEqual(arr: number[], arr2: number[]) {
 	return count >= 1 ? false : true;
 }
 
-console.log(areArraysEqual([1, 2, 3], [3, 1, 2])); // true
-console.log(areArraysEqual([1, 2, 3], [3, 1, 2, 1])); //true
-console.log(areArraysEqual([1, 2, 3], [4, 1, 2])); //false
+console.log(areArraysEqual([1, 2, 3, 1], [3, 1, 2]));
+console.log(areArraysEqual([1, 2, 3], [3, 1, 2, 1, 5]));
+console.log(areArraysEqual([1, 2, 3], [4, 1, 2]));

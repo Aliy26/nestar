@@ -7,7 +7,7 @@ import {
 	MembersInquiry,
 } from "../../libs/dto/member/member.input";
 import { Member, Members } from "../../libs/dto/member/member";
-import { UseGuards } from "@nestjs/common";
+import { BadRequestException, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../auth/guards/auth.guard";
 import { AuthMember } from "../auth/decorators/authMember.decorator";
 import { ObjectId } from "mongoose";
@@ -142,7 +142,7 @@ export class MemberResolver {
 				.on("error", () => reject(false));
 			// .on("error", (err: any) => reject(err));
 		});
-		if (!result) throw new Error(Message.UPLOAD_FAILED);
+		if (!result) throw new BadRequestException(Message.UPLOAD_FAILED);
 
 		return url;
 	}
@@ -166,7 +166,8 @@ export class MemberResolver {
 					const { filename, mimetype, encoding, createReadStream } = await img;
 
 					const validMime = validMimeTypes.includes(mimetype);
-					if (!validMime) throw new Error(Message.PROVIDE_ALLOWED_FORMAT);
+					if (!validMime)
+						throw new BadRequestException(Message.PROVIDE_ALLOWED_FORMAT);
 
 					const imageName = getSerialForImage(filename);
 					const url = `uploads/${target}/${imageName}`;
@@ -178,7 +179,7 @@ export class MemberResolver {
 							.on("finish", () => resolve(true))
 							.on("error", () => reject(false));
 					});
-					if (!result) throw new Error(Message.UPLOAD_FAILED);
+					if (!result) throw new BadRequestException(Message.UPLOAD_FAILED);
 
 					uploadedImages[index] = url;
 				} catch (err) {
