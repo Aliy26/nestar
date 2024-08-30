@@ -3,7 +3,7 @@ import {
 	Injectable,
 	InternalServerErrorException,
 } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
+import { InjectModel, Prop } from "@nestjs/mongoose";
 import { Model, ObjectId } from "mongoose";
 import { Property } from "../../libs/dto/property/property";
 import { PropertyInput } from "../../libs/dto/property/property.input";
@@ -13,18 +13,20 @@ import { StatisticModifier, T } from "../../libs/types/common";
 import { PropertyStatus } from "../../libs/enums/property.enum";
 import { ViewGroup } from "../../libs/enums/view.enum";
 import { ViewService } from "../view/view.service";
+import { PropertyUpdate } from "../../libs/dto/property/property.update";
+import * as moment from "moment";
 
 @Injectable()
 export class PropertyService {
 	constructor(
-		@InjectModel("Property") private readonly propertyModle: Model<Property>,
+		@InjectModel("Property") private readonly propertyModel: Model<Property>,
 		private memberService: MemberService,
 		private viewService: ViewService,
 	) {}
 
 	public async createProperty(input: PropertyInput): Promise<Property> {
 		try {
-			const result: Property = await this.propertyModle.create(input);
+			const result: Property = await this.propertyModel.create(input);
 			// increment memberProperties
 			await this.memberService.memberStatsEditor({
 				_id: result.memberId,
@@ -47,7 +49,7 @@ export class PropertyService {
 			propertyStatus: PropertyStatus.ACTIVE,
 		};
 
-		const targetProperty: Property = await this.propertyModle
+		const targetProperty: Property = await this.propertyModel
 			.findOne(search)
 			.lean()
 			.exec();
@@ -84,12 +86,45 @@ export class PropertyService {
 		input: StatisticModifier,
 	): Promise<Property> {
 		const { _id, targetKey, modifier } = input;
-		return await this.propertyModle
+		return await this.propertyModel
 			.findByIdAndUpdate(
 				_id,
 				{ $inc: { [targetKey]: modifier } },
 				{ new: true },
 			)
 			.exec();
+	}
+
+	public async updateProperty(
+		memberId: ObjectId,
+		input: PropertyUpdate,
+	): Promise<Property> {
+		let { propertyStatus, soldAt, deletedAt } = input;
+		const search: T = {
+			_id: input._id,
+			memberId: memberId,
+			propertyStatus: PropertyStatus.ACTIVE,
+		};
+
+		if (propertyStatus === PropertyStatus.SOLD) soldAt = moment().toDate();
+		else if (propertyStatus === PropertyStatus.DELETE)
+			deletedAt = moment().toDate();
+
+		const result = await this.propertyModel
+			.findOneAndUpdate(search, input, {
+				new: true,
+			})
+			.exec();
+		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+
+		if (soldAt || deletedAt) {
+			await this.memberService.memberStatsEditor({
+				_id: memberId,
+				targetKey: "memberProperties",
+				modifier: -1,
+			});
+		}
+
+		return result;
 	}
 }
