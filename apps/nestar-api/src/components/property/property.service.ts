@@ -33,7 +33,6 @@ export class PropertyService {
 	public async createProperty(input: PropertyInput): Promise<Property> {
 		try {
 			const result: Property = await this.propertyModel.create(input);
-			// increment memberProperties
 			await this.memberService.memberStatsEditor({
 				_id: result.memberId,
 				targetKey: "memberProperties",
@@ -120,6 +119,7 @@ export class PropertyService {
 			.findOneAndUpdate(search, input, {
 				new: true,
 			})
+			.lean()
 			.exec();
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
 
@@ -130,6 +130,8 @@ export class PropertyService {
 				modifier: -1,
 			});
 		}
+
+		result.soldAt = soldAt;
 
 		return result;
 	}
@@ -177,7 +179,7 @@ export class PropertyService {
 			roomsList,
 			bedsList,
 			typeList,
-			periodRange,
+			periodsRange,
 			pricesRange,
 			squaresRange,
 			options,
@@ -191,8 +193,8 @@ export class PropertyService {
 
 		if (pricesRange)
 			match.propertyPrice = { $gte: pricesRange.start, $lte: pricesRange.end };
-		if (periodRange)
-			match.createdAt = { $gte: periodRange.start, $lte: periodRange.end };
+		if (periodsRange)
+			match.createdAt = { $gte: periodsRange.start, $lte: periodsRange.end };
 		if (squaresRange)
 			match.propertySquare = {
 				$gte: squaresRange.start,
@@ -251,6 +253,7 @@ export class PropertyService {
 	): Promise<Properties> {
 		const { propertyStatus, propertyLocationList } = input.search;
 		const match: T = {};
+
 		const sort: T = {
 			[input?.sort ?? "createdAt"]: input?.direction ?? Direction.DESC,
 		};
@@ -293,6 +296,9 @@ export class PropertyService {
 		if (propertyStatus === PropertyStatus.SOLD) soldAt = moment().toDate();
 		else if (propertyStatus === PropertyStatus.DELETE)
 			deletedAt = moment().toDate();
+
+		input.soldAt = soldAt;
+		input.deletedAt = deletedAt;
 
 		const result = await this.propertyModel
 			.findOneAndUpdate(search, input, {

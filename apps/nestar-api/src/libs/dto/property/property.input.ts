@@ -15,7 +15,6 @@ import {
 import { ObjectId } from "mongoose";
 import { availableOptions, availablePropertySorts } from "../../config";
 import { Direction } from "../../enums/common.enum";
-import { Dir } from "fs";
 
 @InputType()
 export class PropertyInput {
@@ -140,7 +139,7 @@ class PISearch {
 
 	@IsOptional()
 	@Field(() => PeriodRange, { nullable: true })
-	periodRange?: PeriodRange;
+	periodsRange?: PeriodRange;
 
 	@IsOptional()
 	@Field(() => SquaresRange, { nullable: true })
@@ -236,7 +235,7 @@ export class AllPropertiesInquiry {
 	@IsOptional()
 	@IsIn(availablePropertySorts)
 	@Field(() => String, { nullable: true })
-	sort?: Direction;
+	sort?: string;
 
 	@IsOptional()
 	@Field(() => Direction, { nullable: true })
