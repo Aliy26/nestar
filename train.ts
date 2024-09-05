@@ -1,10 +1,17 @@
-function findDuplicates(arr: number[]): number[] {
-	let vacant: number[] = [];
-	let vacant2: number[] = [];
-	for (let value of arr) {
-		if (!vacant.includes(value)) vacant.push(value);
-		else if (!vacant2.includes(value)) vacant2.unshift(value);
+// ZR-TASK:
+
+// Shunday function yozing, u parametridagi string ichidagi raqam va sonlarni sonini sanasin.
+// MASALAN: countNumberAndLetters(“string152%\¥”) return {number:3, letter:6}
+
+const alphabet = "abcdefghijklmnopqrstuvwxyz";
+
+function countNumbersAndLetters(str: string): { string: number } {
+	const result = { number: 0, string: 0 };
+	for (let value of str) {
+		if (Number(value) >= 0) result.number++;
+		else if (alphabet.includes(value)) result.string++;
 	}
-	return vacant2;
+	return result;
 }
-console.log(findDuplicates([1, 2, 3, 4, 5, 4, 3, 4]));
+
+console.log(countNumbersAndLetters("string152%/&"));
