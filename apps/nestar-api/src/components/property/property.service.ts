@@ -290,7 +290,10 @@ export class PropertyService {
 
 		const search: T = {
 			_id: input._id,
-			propertyStatus: PropertyStatus.ACTIVE,
+			$or: [
+				{ propertyStatus: PropertyStatus.ACTIVE },
+				{ propertyStatus: PropertyStatus.SOLD },
+			],
 		};
 
 		if (propertyStatus === PropertyStatus.SOLD) soldAt = moment().toDate();
