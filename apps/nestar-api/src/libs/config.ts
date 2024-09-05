@@ -31,7 +31,7 @@ export const availableBoardArticleSorts = [
 	"articleViews",
 ];
 
-export const availableCommentSorts = ["createdAt, updatedAt"];
+export const availableCommentSorts = ["createdAt", "updatedAt"];
 
 // IMAGE CONFIGURATION (config.js)
 import { v4 as uuidv4 } from "uuid";
