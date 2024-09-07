@@ -8,11 +8,11 @@ import { LikeService } from "./like.service";
 		MongooseModule.forFeature([
 			{
 				name: "Like",
-				schema: LikeSchema,
-			},
-		]),
+				schema: LikeSchema
+			}
+		])
 	],
 	providers: [LikeService],
-	exports: [LikeService],
+	exports: [LikeService]
 })
 export class LikeModule {}

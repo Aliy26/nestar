@@ -1,26 +1,26 @@
-import { Schema } from 'mongoose';
-import { ViewGroup } from '../libs/enums/view.enum';
+import { Schema } from "mongoose";
+import { ViewGroup } from "../libs/enums/view.enum";
 
 const LikeSchema = new Schema(
 	{
 		likeGroup: {
 			type: String,
 			enum: ViewGroup,
-			required: true,
+			required: true
 		},
 
 		likeRefId: {
 			type: Schema.Types.ObjectId,
-			required: true,
+			required: true
 		},
-		
+
 		memberId: {
 			type: Schema.Types.ObjectId,
 			required: true,
-			ref: 'Member',
-		},
+			ref: "Member"
+		}
 	},
-	{ timestamps: true, collection: 'likes' },
+	{ timestamps: true, collection: "likes" }
 );
 
 LikeSchema.index({ memberId: 1, likeRefId: 1 }, { unique: true });

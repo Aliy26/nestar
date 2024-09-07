@@ -19,11 +19,11 @@ export enum Message {
 	ONLY_SPECIFIC_ROLES_ALLOWED = "Allowed only for members with specifi roles",
 	ONLY_ALLOWED_FORMAT = "Please provide jpg, jpeg or png images!",
 	PROVIDE_ALLOWED_FORMAT = "Please provide jpg, jpeg or png images!",
-	SELF_SUBSCRIPTION_DENIED = "Self subscription is denied!",
+	SELF_SUBSCRIPTION_DENIED = "Self subscription is denied!"
 }
 
 export enum Direction {
 	ASC = 1,
-	DESC = -1,
+	DESC = -1
 }
 registerEnumType(Direction, { name: "Direction" });

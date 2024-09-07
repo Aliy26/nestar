@@ -8,13 +8,8 @@ import { ViewModule } from "../view/view.module";
 import { LikeModule } from "../like/like.module";
 
 @Module({
-	imports: [
-		MongooseModule.forFeature([{ name: "Member", schema: MemberSchema }]),
-		AuthModule,
-		ViewModule,
-		LikeModule,
-	],
+	imports: [MongooseModule.forFeature([{ name: "Member", schema: MemberSchema }]), AuthModule, ViewModule, LikeModule],
 	providers: [MemberResolver, MemberService],
-	exports: [MemberService],
+	exports: [MemberService]
 })
 export class MemberModule {}

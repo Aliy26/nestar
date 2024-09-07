@@ -1,11 +1,6 @@
 import { Mutation, Resolver, Query, Args } from "@nestjs/graphql";
 import { MemberService } from "./member.service";
-import {
-	AgentsInquiry,
-	LoginInput,
-	MemberInput,
-	MembersInquiry,
-} from "../../libs/dto/member/member.input";
+import { AgentsInquiry, LoginInput, MemberInput, MembersInquiry } from "../../libs/dto/member/member.input";
 import { Member, Members } from "../../libs/dto/member/member";
 import { BadRequestException, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../auth/guards/auth.guard";
@@ -15,11 +10,7 @@ import { MemberType } from "../../libs/enums/member.enum";
 import { Roles } from "../auth/decorators/roles.decorator";
 import { RolesGuard } from "../auth/guards/roles.guard";
 import { MemberUpdate } from "../../libs/dto/member/member.update";
-import {
-	getSerialForImage,
-	shapeIntoMongoObjectId,
-	validMimeTypes,
-} from "../../libs/config";
+import { getSerialForImage, shapeIntoMongoObjectId, validMimeTypes } from "../../libs/config";
 import { WithoutGuard } from "../auth/guards/without.guard";
 import { GraphQLUpload, FileUpload } from "graphql-upload";
 import { createWriteStream } from "fs";
@@ -45,7 +36,7 @@ export class MemberResolver {
 	@Mutation(() => Member)
 	public async updateMember(
 		@Args("input") input: MemberUpdate,
-		@AuthMember("_id") memberId: ObjectId,
+		@AuthMember("_id") memberId: ObjectId
 	): Promise<Member> {
 		console.log("Mutation: updateMember");
 		delete input._id;
@@ -53,10 +44,7 @@ export class MemberResolver {
 	}
 	@UseGuards(WithoutGuard)
 	@Query(() => Member)
-	public async getMember(
-		@Args("memberId") input: string,
-		@AuthMember("_id") memberId: ObjectId,
-	): Promise<Member> {
+	public async getMember(@Args("memberId") input: string, @AuthMember("_id") memberId: ObjectId): Promise<Member> {
 		console.log("Query: getMember");
 		console.log("memberId", memberId);
 		const targetId = shapeIntoMongoObjectId(input);
@@ -66,19 +54,14 @@ export class MemberResolver {
 
 	@UseGuards(WithoutGuard)
 	@Query(() => Members)
-	public async getAgents(
-		@Args("input") input: AgentsInquiry,
-		@AuthMember("id") memberId: ObjectId,
-	): Promise<Members> {
+	public async getAgents(@Args("input") input: AgentsInquiry, @AuthMember("id") memberId: ObjectId): Promise<Members> {
 		console.log("Query, getAgents");
 		return await this.memberService.getAgents(memberId, input);
 	}
 
 	@UseGuards(AuthGuard)
 	@Query(() => String)
-	public async checkAuth(
-		@AuthMember("memberNick") memberNick: string,
-	): Promise<string> {
+	public async checkAuth(@AuthMember("memberNick") memberNick: string): Promise<string> {
 		console.log("Query: checkAuth");
 		console.log("memberNick:", memberNick);
 		return `Hi ${memberNick}`;
@@ -87,9 +70,7 @@ export class MemberResolver {
 	@Roles(MemberType.USER, MemberType.AGENT)
 	@UseGuards(RolesGuard)
 	@Query(() => String)
-	public async checkAuthRoles(
-		@AuthMember() authMember: Member,
-	): Promise<string> {
+	public async checkAuthRoles(@AuthMember() authMember: Member): Promise<string> {
 		console.log("Query: checkAuthRoles");
 		return `Hi ${authMember.memberNick}, you are ${authMember.memberType}, memberId: ${authMember._id}`;
 	}
@@ -98,7 +79,7 @@ export class MemberResolver {
 	@Mutation(() => Member)
 	public async likeTargetMember(
 		@Args("memberId") input: string,
-		@AuthMember("_id") memberId: ObjectId,
+		@AuthMember("_id") memberId: ObjectId
 	): Promise<Member> {
 		console.log("Mutation: likeTargetMember");
 		const likeRefId = shapeIntoMongoObjectId(input);
@@ -110,18 +91,14 @@ export class MemberResolver {
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
 	@Query(() => Members)
-	public async getAllMembersByAdmin(
-		@Args("input") input: MembersInquiry,
-	): Promise<Members> {
+	public async getAllMembersByAdmin(@Args("input") input: MembersInquiry): Promise<Members> {
 		return await this.memberService.getAllMembersByAdmin(input);
 	}
 
 	@Roles(MemberType.ADMIN)
 	@UseGuards(RolesGuard)
 	@Mutation(() => Member)
-	public async updateMemberByAdmin(
-		@Args("input") input: MemberUpdate,
-	): Promise<Member> {
+	public async updateMemberByAdmin(@Args("input") input: MemberUpdate): Promise<Member> {
 		console.log("Mutation: updateMemberByAdmin");
 
 		return await this.memberService.updateMemmberByAdmin(input);
@@ -134,7 +111,7 @@ export class MemberResolver {
 	public async imageUploader(
 		@Args({ name: "file", type: () => GraphQLUpload })
 		{ createReadStream, filename, mimetype }: FileUpload,
-		@Args("target") target: String,
+		@Args("target") target: String
 	): Promise<string> {
 		console.log("Mutation: imageUploader");
 
@@ -163,41 +140,35 @@ export class MemberResolver {
 	public async imagesUploader(
 		@Args("files", { type: () => [GraphQLUpload] })
 		files: Promise<FileUpload>[],
-		@Args("target") target: String,
+		@Args("target") target: String
 	): Promise<string[]> {
 		console.log("Mutation: imagesUploader");
 
 		const uploadedImages = [];
-		const promisedList = files.map(
-			async (
-				img: Promise<FileUpload>,
-				index: number,
-			): Promise<Promise<void>> => {
-				try {
-					const { filename, mimetype, encoding, createReadStream } = await img;
+		const promisedList = files.map(async (img: Promise<FileUpload>, index: number): Promise<Promise<void>> => {
+			try {
+				const { filename, mimetype, encoding, createReadStream } = await img;
 
-					const validMime = validMimeTypes.includes(mimetype);
-					if (!validMime)
-						throw new BadRequestException(Message.PROVIDE_ALLOWED_FORMAT);
+				const validMime = validMimeTypes.includes(mimetype);
+				if (!validMime) throw new BadRequestException(Message.PROVIDE_ALLOWED_FORMAT);
 
-					const imageName = getSerialForImage(filename);
-					const url = `uploads/${target}/${imageName}`;
-					const stream = createReadStream();
+				const imageName = getSerialForImage(filename);
+				const url = `uploads/${target}/${imageName}`;
+				const stream = createReadStream();
 
-					const result = await new Promise((resolve, reject) => {
-						stream
-							.pipe(createWriteStream(url))
-							.on("finish", () => resolve(true))
-							.on("error", () => reject(false));
-					});
-					if (!result) throw new BadRequestException(Message.UPLOAD_FAILED);
+				const result = await new Promise((resolve, reject) => {
+					stream
+						.pipe(createWriteStream(url))
+						.on("finish", () => resolve(true))
+						.on("error", () => reject(false));
+				});
+				if (!result) throw new BadRequestException(Message.UPLOAD_FAILED);
 
-					uploadedImages[index] = url;
-				} catch (err) {
-					console.log("Error, file missing!");
-				}
-			},
-		);
+				uploadedImages[index] = url;
+			} catch (err) {
+				console.log("Error, file missing!");
+			}
+		});
 
 		await Promise.all(promisedList);
 		return uploadedImages;

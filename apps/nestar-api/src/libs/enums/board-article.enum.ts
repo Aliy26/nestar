@@ -4,16 +4,16 @@ export enum BoardArticleCategory {
 	FREE = "FREE",
 	RECOMMEND = "RECOMMEND",
 	NEWS = "NEWS",
-	HUMOR = "HUMOR",
+	HUMOR = "HUMOR"
 }
 registerEnumType(BoardArticleCategory, {
-	name: "BoardArticleCategory",
+	name: "BoardArticleCategory"
 });
 
 export enum BoardArticleStatus {
 	ACTIVE = "ACTIVE",
-	DELETE = "DELETE",
+	DELETE = "DELETE"
 }
 registerEnumType(BoardArticleStatus, {
-	name: "BoardArticleStatus",
+	name: "BoardArticleStatus"
 });
