@@ -74,18 +74,46 @@ export class CommentService {
 		input: CommentUpdate,
 	): Promise<Comment> {
 		const { _id } = input;
-		const result = await this.commentModel.findOneAndUpdate(
-			{
-				_id: _id,
-				memberId: memberId,
-				commentStatus: CommentStatus.ACTIVE,
-			},
-			input,
-			{
-				new: true,
-			},
-		);
+		const result = await this.commentModel
+			.findOneAndUpdate(
+				{
+					_id: _id,
+					memberId: memberId,
+					commentStatus: CommentStatus.ACTIVE,
+				},
+				input,
+				{
+					new: true,
+				},
+			)
+			.exec();
 		if (!result) throw new InternalServerErrorException(Message.UPDATE_FAILED);
+
+		if (result.commentStatus === CommentStatus.DELETE) {
+			switch (result.commentGroup) {
+				case CommentGroup.PROPERTY:
+					await this.propertyService.propertyStatsEditor({
+						_id: result.commentRefId,
+						targetKey: "propertyComments",
+						modifier: -1,
+					});
+					break;
+				case CommentGroup.ARTICLE:
+					await this.boardArticleService.boardArticleStatsEditor({
+						_id: result.commentRefId,
+						targetKey: "articleComments",
+						modifier: -1,
+					});
+				case CommentGroup.MEMBER:
+					await this.memberService.memberStatsEditor({
+						_id: result.commentRefId,
+						targetKey: "memberComments",
+						modifier: -1,
+					});
+					break;
+			}
+		}
+
 		return result;
 	}
 
@@ -127,6 +155,30 @@ export class CommentService {
 	public async removeCommentByAdmin(input: ObjectId): Promise<Comment> {
 		const result = await this.commentModel.findByIdAndDelete(input);
 		if (!result) throw new InternalServerErrorException(Message.REMOVE_FAILED);
+		if (result.commentStatus === CommentStatus.ACTIVE) {
+			switch (result.commentGroup) {
+				case CommentGroup.PROPERTY:
+					await this.propertyService.propertyStatsEditor({
+						_id: result.commentRefId,
+						targetKey: "propertyComments",
+						modifier: -1,
+					});
+					break;
+				case CommentGroup.ARTICLE:
+					await this.boardArticleService.boardArticleStatsEditor({
+						_id: result.commentRefId,
+						targetKey: "articleComments",
+						modifier: -1,
+					});
+				case CommentGroup.MEMBER:
+					await this.memberService.memberStatsEditor({
+						_id: result.commentRefId,
+						targetKey: "memberComments",
+						modifier: -1,
+					});
+					break;
+			}
+		}
 		return result;
 	}
 }

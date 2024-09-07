@@ -1,15 +1,14 @@
-// ZR-TASK:
+// ZS-TASK:
 
-// Shunday function yozing, u parametridagi string ichidagi raqam va sonlarni sonini sanasin.
-// MASALAN: countNumberAndLetters(“string152%\¥”) return {number:3, letter:6}
+// Shunday function yozing, u parametridagi arrayni ichidagi 1 marta kelgan elemnetni qaytarsin.
+// MASALAN: singleNumber([4, 2, 1, 2, 1]) return 4
 
-function countNumbersAndLetters(str: string): { string: number } {
-	const result = { number: 0, string: 0 };
-	for (let value of str) {
-		if (Number(value) >= 0) result.number++;
-		else if (value >= "a") result.string++;
+function singleNumber(arr: number[]): number | number[] {
+	let vacant: number[] = [];
+	for (let value of arr) {
+		if (arr.indexOf(value) === arr.lastIndexOf(value)) vacant.push(value);
 	}
-	return result;
+	return vacant.length === 1 ? vacant[0] : vacant;
 }
 
-console.log(countNumbersAndLetters("string152%/&"));
+console.log(singleNumber([4, 2, 1, 2, 1]));

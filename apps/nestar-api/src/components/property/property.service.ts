@@ -111,9 +111,13 @@ export class PropertyService {
 			propertyStatus: PropertyStatus.ACTIVE,
 		};
 
-		if (propertyStatus === PropertyStatus.SOLD) soldAt = moment().toDate();
-		else if (propertyStatus === PropertyStatus.DELETE)
+		if (propertyStatus === PropertyStatus.SOLD) {
+			soldAt = moment().toDate();
+			input.soldAt = soldAt;
+		} else if (propertyStatus === PropertyStatus.DELETE) {
 			deletedAt = moment().toDate();
+			input.deletedAt = deletedAt;
+		}
 
 		const result = await this.propertyModel
 			.findOneAndUpdate(search, input, {
