@@ -30,7 +30,7 @@ export class MemberService {
 		@InjectModel("Member") private readonly memberModel: Model<Member>,
 		private authService: AuthService,
 		private viewService: ViewService,
-		private likeModel: LikeService,
+		private likeService: LikeService,
 	) {}
 
 	public async signup(input: MemberInput): Promise<Member> {
@@ -178,7 +178,7 @@ export class MemberService {
 
 		// LIKE TOGGLE via Like Module
 
-		const modifier: number = await this.likeModel.toggleLike(input);
+		const modifier: number = await this.likeService.toggleLike(input);
 		const result = await this.memberStatsEditor({
 			_id: likeRefId,
 			targetKey: "memberLikes",

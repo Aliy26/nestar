@@ -8,8 +8,8 @@ import { T } from "../../libs/types/common";
 @Injectable()
 export class LikeService {
 	constructor(@InjectModel("Like") private readonly likeModel: Model<Like>) {}
-
 	public async toggleLike(input: LikeInput): Promise<number> {
+		console.log("passed here!");
 		const search: T = { memberId: input.memberId, likeRefId: input.likeRefId },
 			exist = await this.likeModel.findOne(search).exec();
 		let modifier = 1;
