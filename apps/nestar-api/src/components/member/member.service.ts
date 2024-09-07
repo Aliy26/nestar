@@ -83,6 +83,7 @@ export class MemberService {
 				viewRefId: targetId,
 				viewGroup: ViewGroup.MEMBER
 			};
+
 			const newView = await this.viewService.recordView(viewInput);
 			if (newView) {
 				await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: +1 } }, { new: true }).exec();
@@ -134,11 +135,7 @@ export class MemberService {
 	public async likeTargetMember(memberId: ObjectId, likeRefId: ObjectId): Promise<Member> {
 		const target: Member = await this.memberModel.findOne({ _id: likeRefId, memberStatus: MemberStatus.ACTIVE }).exec();
 		if (!target) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
-		const input: LikeInput = {
-			memberId: memberId,
-			likeRefId: likeRefId,
-			likeGroup: LikeGroup.MEMBER
-		};
+		const input: LikeInput = { memberId: memberId, likeRefId: likeRefId, likeGroup: LikeGroup.MEMBER };
 
 		// LIKE TOGGLE via Like Module
 
