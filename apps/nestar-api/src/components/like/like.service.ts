@@ -9,7 +9,6 @@ import { T } from "../../libs/types/common";
 export class LikeService {
 	constructor(@InjectModel("Like") private readonly likeModel: Model<Like>) {}
 	public async toggleLike(input: LikeInput): Promise<number> {
-		console.log("passed here!");
 		const search: T = { memberId: input.memberId, likeRefId: input.likeRefId },
 			exist = await this.likeModel.findOne(search).exec();
 		let modifier = 1;
@@ -17,6 +16,7 @@ export class LikeService {
 		if (exist) {
 			await this.likeModel.findOneAndDelete(search).exec();
 			modifier = -1;
+			console.log(modifier);
 		} else {
 			try {
 				await this.likeModel.create(input);
