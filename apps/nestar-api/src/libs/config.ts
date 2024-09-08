@@ -1,18 +1,7 @@
 import { ObjectId } from "bson";
 
-export const availableAgentSorts = [
-	"createdAt",
-	"updatedAt",
-	"memberLikes",
-	"memberViews",
-	"memberRanks",
-];
-export const availableMemberSorts = [
-	"createdAt",
-	"updatedAt",
-	"memberLikes",
-	"memberViews",
-];
+export const availableAgentSorts = ["createdAt", "updatedAt", "memberLikes", "memberViews", "memberRanks"];
+export const availableMemberSorts = ["createdAt", "updatedAt", "memberLikes", "memberViews"];
 
 export const availableOptions = ["propertyBarter", "propertyRent"];
 export const availablePropertySorts = [
@@ -21,15 +10,10 @@ export const availablePropertySorts = [
 	"propertyLikes",
 	"propertyViews",
 	"propertyRank",
-	"propertyPrice",
+	"propertyPrice"
 ];
 
-export const availableBoardArticleSorts = [
-	"createdAt",
-	"updatedAt",
-	"articleLikes",
-	"articleViews",
-];
+export const availableBoardArticleSorts = ["createdAt", "updatedAt", "articleLikes", "articleViews"];
 
 export const availableCommentSorts = ["createdAt", "updatedAt"];
 
@@ -52,6 +36,24 @@ export const lookupMember = {
 		from: "members",
 		localField: "memberId",
 		foreignField: "_id",
-		as: "memberData",
-	},
+		as: "memberData"
+	}
+};
+
+export const lookupFollowingData = {
+	$lookup: {
+		from: "members",
+		localField: "followingId",
+		foreignField: "_id",
+		as: "followingData"
+	}
+};
+
+export const lookupFollowerData = {
+	$lookup: {
+		from: "members",
+		localField: "followerId",
+		foreignField: "_id",
+		as: "followerData"
+	}
 };
