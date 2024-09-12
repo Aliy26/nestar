@@ -1,17 +1,16 @@
-// ZT-TASK:
+// ZU-TASK:
 
-// Shunday function yozing, u parametridagi string ichida 1 martadan ortiq qaytarilmagan birinchi harf indeksini qaytarsin.
-// MASALAN: firstUniqueCharIndex(“stamp”) return 0
+// Shunday function yozing, u parametridagi array ichida takrorlanmagan raqamlar yig'indisini qaytarsin.
+// MASALAN: sumOfUnique([1,2,3,2]) return 4
 
 // @MITASK
 
-function firstUniqueCharIndex(str: string): number | null {
-	for (let value of str) {
-		if (str.indexOf(value) === str.lastIndexOf(value)) return str.indexOf(value);
-	}
-	return null;
+function sumOfUnique(arr: number[]): number {
+  let count: number = 0;
+  for (let value of arr) {
+    if (arr.indexOf(value) === arr.lastIndexOf(value)) count += value;
+  }
+  return count;
 }
 
-console.log(firstUniqueCharIndex("ssttaammpp"));
-console.log(firstUniqueCharIndex("sstamp"));
-console.log(firstUniqueCharIndex("stamp"));
+console.log(sumOfUnique([1, 2, 3, 2]));
