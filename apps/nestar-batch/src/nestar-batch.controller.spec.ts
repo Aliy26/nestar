@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { NestarBatchController } from './nestar-batch.controller';
-import { NestarBatchService } from './nestar-batch.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { NestarBatchController } from "./batch.controller";
+import { NestarBatchService } from "./nestar-batch.service";
 
-describe('NestarBatchController', () => {
+describe("NestarBatchController", () => {
   let nestarBatchController: NestarBatchController;
 
   beforeEach(async () => {
@@ -11,12 +11,14 @@ describe('NestarBatchController', () => {
       providers: [NestarBatchService],
     }).compile();
 
-    nestarBatchController = app.get<NestarBatchController>(NestarBatchController);
+    nestarBatchController = app.get<NestarBatchController>(
+      NestarBatchController,
+    );
   });
 
-  describe('root', () => {
+  describe("root", () => {
     it('should return "Hello World!"', () => {
-      expect(nestarBatchController.getHello()).toBe('Hello World!');
+      expect(nestarBatchController.getHello()).toBe("Hello World!");
     });
   });
 });
