@@ -5,7 +5,7 @@ export const availableAgentSorts = [
   "updatedAt",
   "memberLikes",
   "memberViews",
-  "memberRanks",
+  "memberRank",
 ];
 export const availableMemberSorts = [
   "createdAt",

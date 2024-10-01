@@ -66,7 +66,7 @@ export class Member {
   @Field(() => Int)
   memberComments: number;
 
-  @Field(() => Int)
+  @Field(() => Number)
   memberRank: number;
 
   @Field(() => Int)
