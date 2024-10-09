@@ -15,7 +15,6 @@ import { MemberService } from "../member/member.service";
 import { Direction, Message } from "../../libs/enums/common.enum";
 import { FollowInquiry } from "../../libs/dto/follow/follow.input";
 import { T } from "../../libs/types/common";
-import { lookup } from "dns";
 import {
   lookupAuthMemberFollowed,
   lookupAuthMemberLiked,
@@ -82,10 +81,12 @@ export class FollowService {
     if (!targetMember)
       throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
-    const result = await this.followModel.findOneAndDelete({
-      followingId: followingId,
-      followerId: followerId,
-    });
+    const result = await this.followModel
+      .findOneAndDelete({
+        followingId: followingId,
+        followerId: followerId,
+      })
+      .exec();
     if (!result) throw new InternalServerErrorException(Message.NO_DATA_FOUND);
 
     await this.memberService.memberStatsEditor({
