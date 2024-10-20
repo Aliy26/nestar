@@ -3,7 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
 } from "@nestjs/common";
-import { InjectModel, Prop } from "@nestjs/mongoose";
+import { InjectModel } from "@nestjs/mongoose";
 import { Model, ObjectId } from "mongoose";
 import { Properties, Property } from "../../libs/dto/property/property";
 import {
@@ -221,7 +221,7 @@ export class PropertyService {
       };
 
     if (text) match.propertyTitle = { $regex: new RegExp(text, "i") };
-    if (options) {
+    if (options && options.length) {
       match["$or"] = options.map((ele) => {
         return { [ele]: true };
       });
